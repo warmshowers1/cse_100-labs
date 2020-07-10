@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+// The implementation of this algorithm was made possible soully 
+// through the use of the textbook: ISBN: 978-0-262-03384-8
+// on pages 170 - 180
+
 using namespace std;
 
 int randoSplit(int arr[], int a, int b);

@@ -6,6 +6,9 @@
 
 using namespace std;
 
+void maxHeap(int arr[], int size, int x);
+void heapSort(int arr[], int size);
+void swap(int* x, int* y);
 int left(int i);
 int right(int i);
 int parent(int i);
@@ -19,7 +22,7 @@ int main(){
     return 0;
 }
 
-void max-heap(int arr[], int size, int x){
+void maxHeap(int arr[], int size, int x){
     int big;
     if(left(x) <= size && arr[left(x)] > arr[right(x)]) big = left(x);
     else big = x;
@@ -30,6 +33,14 @@ void max-heap(int arr[], int size, int x){
     }
 }
 
+void heapSort(int arr[], int size){
+    int i;
+    for(i = size/2; i >= 0; i--) maxHeap(arr, size, i); // Builds max heap
+    for(i = size; i > 0; i--){
+        swap(arr[0], arr[i]);
+        maxHeap(arr, size, 0);
+    }
+}
 int left(int i) return 2*i;
 int right(int i) return 2*i + 1;
 int parent(int i) return i/2;
