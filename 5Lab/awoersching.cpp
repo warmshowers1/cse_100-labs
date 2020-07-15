@@ -3,6 +3,9 @@
 
 using namespace std;
 
+void insertSort(vector<int> arr[], int length, int index);
+void radSort(vector<int> arr[], int length);
+
 int main(){
     int i, j, length, num;
     cin >> length;
@@ -21,8 +24,17 @@ int main(){
     return 0;
 }
 
-void radSort(vector<int> arr[], int digit){
-    for(int i = 0; i < digit; i++){
-        
+void radSort(vector<int> arr[], int num){
+    for(int i = num - 1; i >= 0; i--){
+        insertSort(arr, num, i);
     }
+}
+
+void insertSort(vector<int> arr[], int num, int index){
+    int i, marker;
+	for(i = 1; i < num; i++){
+		marker = i;
+		while((arr[i][index] < arr[marker - 1][index]) && marker > 0) marker -= 1;
+		if(marker != i) arr[i].swap(arr[marker]);
+	}
 }
