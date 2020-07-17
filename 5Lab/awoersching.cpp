@@ -1,6 +1,10 @@
 #include<iostream>
 #include<vector>
 
+// The implementation of this algorithm was made possible soully 
+// through the use of the textbook: ISBN: 978-0-262-03384-8
+// on pages 194 - 199
+
 using namespace std;
 
 void radSort(vector<int> arr[], vector<int> sorted[], int length, int num);
