@@ -3,13 +3,13 @@
 
 using namespace std;
 
-void insertSort(vector<int> arr[], int length, int index);
-void radSort(vector<int> arr[], int length);
+void radSort(vector<int> arr[], vector<int> sorted[], int length, int num);
+void countSort(vector<int> arr[], vector<int> sorted[], int length, int index);
 
 int main(){
     int i, j, length, num;
     cin >> length;
-    vector<int> arr[length];
+    vector<int> arr[length], sorted[length];
     for(i = 0; i < length; i++){
         while(arr[i].size() < 10){
             cin >> num;
@@ -17,24 +17,28 @@ int main(){
             else arr[i].push_back(-1);
         }
     }
-    radSort(arr, 10);
-    for(i = 0; i < length; i++)
-        for(j = 0; j < 10; j++)
-            cout << arr[i][j] << ";" << endl;
+    radSort(arr, sorted, length, arr[0].size());
+    for(i = 0; i < length; i++){
+        for(j = 0; j < arr[0].size(); j++){
+            if(arr[0].size() % 2 == 1) cout << sorted[i][j] << ";";
+            else cout << arr[i][j] << ";";
+        }
+        cout << endl;
+    }
     return 0;
 }
 
-void radSort(vector<int> arr[], int num){
+void radSort(vector<int> arr[], vector<int> sorted[], int length, int num){
     for(int i = num - 1; i >= 0; i--){
-        insertSort(arr, num, i);
+        if(i % 2 == 1) countSort(arr, sorted, length, i);
+        else countSort(sorted, arr, length, i);
     }
 }
 
-void insertSort(vector<int> arr[], int num, int index){
-    int i, marker;
-	for(i = 1; i < num; i++){
-		marker = i;
-		while((arr[i][index] < arr[marker - 1][index]) && marker > 0) marker -= 1;
-		if(marker != i) arr[i].swap(arr[marker]);
-	}
+void countSort(vector<int> arr[], vector<int> sorted[], int length, int index){
+    int i, counts[4] = {0, 0, 0, 0};
+    for(i = 0; i < length; i++) counts[arr[i][index]]++;
+    for(i = 1; i <= 3; i++) counts[i] += counts[i - 1];
+    for(i = 0; i < 4; i++) counts[i]--;
+    for(i = length - 1; i >= 0; i--) sorted[counts[arr[i][index]]--] = arr[i];
 }
