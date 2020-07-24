@@ -2,31 +2,39 @@
 
 // The implementation of this algorithm was made possible 
 // through the use of the textbook: ISBN: 978-0-262-03384-8
-// on pages 360 - 366
+// on pages 360 - 369
 
 using namespace std;
 
-int cutRod(int* p);
-
-int n;
+void cutRod(int* p, int n);
 
 int main(){
+	int i, n;
 	cin >> n;
-	int i, p[n+1];
-	p[0] = 0; 
-	for(i = 1; i <= n; i++) cin >> p[i];
-    cout << cutRod(p) << endl;
+    int prices[n+1];
+	prices[0] = 0; 
+	for(i = 1; i <= n; i++) cin >> prices[i];
+    cutRod(prices, n);
     return 0;
 }
 
-int cutRod(int* p){
-    int i, j, max, r[n+1];
-    r[0] = 0;
+void cutRod(int* prices, int n){
+    int i, j, max, rev[n+1], slices[n+1];
+    rev[0] = 0;
     for(i = 1; i <= n; i++){
-        max = p[0];
-        for(j = 1; j <= i; j++)
-            if(max < (p[j] + r[i - j])) max = (p[j] + r[i - j]);
-        r[i] = max;
+        max = prices[0];
+        for(j = 1; j <= i; j++){
+            if(max < (prices[j] + rev[i - j])){
+                max = (prices[j] + rev[i - j]);
+                slices[i] = j;
+            }
+        }
+        rev[i] = max;
     }
-    return r[n];
+    cout << rev[n] << endl;
+    while(n > 0){
+        cout << slices[n] << " ";
+        n -= slices[n];
+    }
+    cout << "-1" << endl;
 }

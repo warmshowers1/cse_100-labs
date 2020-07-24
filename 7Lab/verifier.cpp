@@ -3,17 +3,26 @@
 using namespace std;
 
 
-int main(int argc, char **argv) {
+int main(int argc,char **argv) {
 
   // Get the size of the sequence
-  int i, n = 1;
+  int n = 1;
   int* p; 
 
   cin >> n;
 
   p = new int[n+1];
+  //read p; 
   p[0] = 0; 
-  for(i = 1; i <= n; i++) cin >> p[i];
+  for(int i=1; i<=n; i++)
+  {
+    cin >> p[i];  
+  }
+
+
+ 
+ // for(int i=1; i<=n; i++)
+ //   cout << p[i]<< endl;
 
   int total_length = 0; 
   int total_revenue = 0; 
@@ -29,7 +38,7 @@ int main(int argc, char **argv) {
       total_length += length;
       total_revenue += p[length]; 
     }
-  }while(length > 0);
+  }while(length >0);
 
   //cout << total_length << endl;
   //cout << total_revenue << endl;
