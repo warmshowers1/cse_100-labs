@@ -2,42 +2,46 @@
 
 // The implementation of this algorithm was made possible 
 // through the use of the textbook: ISBN: 978-0-262-03384-8
-// on pages 370 - 377
+// on pages 370 - 389
 
 using namespace std;
 
-void matChain(int arr[], int* s[]);
-void printMatrix(int** arr, int p, int q);
-
 int n;
+
+int matChain(int arr[]);
+int lookup(int arr[], int** m, int i, int j);
+void printMatrix(int** arr, int p, int q);
+void printOptimal(int* s[], int i, int j);
 
 int main(){
     cin >> n;
     int i = 0, arr[n+1];
     while(i <= n) cin >> arr[i++];
-    int* s[n-1];
-    matChain(arr, s);
+    cout << matChain(arr) << endl;
     return 0;
 }
 
-void matChain(int arr[], int* s[]){
-    int i, j, k, l, q, m[n-1][n-1];
-    for(i = 0; i < (n-1); i++) m[i][i] = 0;
-    // This be where the magic happens
-    for(l = 2; l <= n; l++){
-        for(i = 1; i < (n-l+1); i++){
-            j = i + l - 1;
+int matChain(int arr[]){
+    int i, j;
+    int** m = new int*[n];
+    for(i = 0; i < n; i++) m[i] = new int[n];
+    for(i = 0; i < n; i++)
+        for(j = i; j < n; j++)
             m[i][j] = -1;
-            for(k = i; k < j; k++){
-                q = m[i][k] + m[(k+1)][j] + (arr[i-1] * arr[k] * arr[j]);
-                if(q < m[i][j]){
-                    m[i][j] = q;
-                    s[i][j] = k;
-                }
-            }
+    return lookup(arr, m, 0, n-1);
+}
+
+int lookup(int arr[], int** m, int i, int j){
+    int k, q;
+    if(m[i][j] > -1) return m[i][j];
+    if(i == j) m[i][j] = 0;
+    else{
+        for(k = i; k < j; k++){
+            q = lookup(arr, m, i, k) + lookup(arr, m, k+1, j) + (arr[i] * arr[k+1] * arr[j+1]);
+            if((m[i][j] == -1) || (m[i][j] > q)) m[i][j] = q;
         }
     }
-    printMatrix(s, n-1, n);
+    return m[i][j];
 }
 
 void printMatrix(int** arr, int p, int q){
@@ -46,4 +50,15 @@ void printMatrix(int** arr, int p, int q){
             cout << arr[i][j] << " ";
         cout << endl;
     }
+}
+
+void printOptimal(int* s[], int i, int j){
+   if(i == j) cout << "A" << i; 
+   else{
+       cout << "(";
+       printOptimal(s, i, s[i][j]);
+       printOptimal(s, ++s[i][j], j);
+       cout << ")";
+   }
+   cout << endl;
 }
