@@ -8,11 +8,10 @@
 using namespace std;
 
 void transpose(vector<int> g[], vector<int> t[]);
-void printArray(vector<int> g[]);
 int *dfs(vector<int> g[]);
-void dfsv(vector<int> g[], int node, int *time, int start[], int end[], bool visited[]);
-int *endTimeOrder(int normEnds[]);
+void dfsv(vector<int> g[], int node, int *time, int end[], bool visited[]);
 int *dfsTPose(vector<int> t[], int foo[]);
+int *endTimeOrder(int normEnds[]);
 
 int v, e;
 
@@ -20,7 +19,7 @@ int main(){
     cin >> v;
     vector<int> g[v], t[v];
     cin >> e;
-    int i, num, edge, *normEnds;
+    int i, num, edge, *normEnds, *tPoseEnds, sccids[v];
     for(i = 0; i < e; i++){
         cin >> num >> edge;
         // This if statement is primarily an 
@@ -35,9 +34,8 @@ int main(){
     transpose(g, t);
     normEnds = dfs(g);
     int *normEndOrder = endTimeOrder(normEnds);
-    int *bar = dfsTPose(t, normEndOrder);
-    for(i = 0; i < v; i++) cout << bar[i] << ",";
-    cout << endl;
+    tPoseEnds = dfsTPose(t, normEndOrder);
+    int *tPoseEndOrder = endTimeOrder(tPoseEnds);
     return 0;
 }
 
@@ -49,43 +47,46 @@ void transpose(vector<int> g[], vector<int> t[]){
     }
 }
 
-void printArray(vector<int> g[]){
-    int i, j;
-    for(i = 0; i < v; i++){
-        cout << i << ":";
-        for(j = 0; j < g[i].size(); j++)
-            cout << g[i][j] << ",";
-        cout << endl;
-    }
-}
-
 int *dfs(vector<int> g[]){
     bool visited[v];
-    int i, time = 0, start[v], *end = (int*)malloc(v * sizeof(int));
+    int i, time = 0, *end = (int*)malloc(v * sizeof(int));
     for(i = 0; i < v; i++){
         visited[i] = false;
-        start[i] = 0;
         end[i] = 0;
     }
     for(i = 0; i < v; i++){
         if(visited[i] == false){
-            dfsv(g, i, &time, start, end, visited);
+            dfsv(g, i, &time, end, visited);
         }
     }
     return end;
 }
 
-void dfsv(vector<int> g[], int vertex, int *time, int start[], int end[], bool visited[]){
+void dfsv(vector<int> g[], int vertex, int *time, int end[], bool visited[]){
     int j, parent;
-    start[vertex] = ++*(time);
+    ++*(time);
     visited[vertex] = true;
     for(j = 0; j < g[vertex].size(); j++){
         if(visited[g[vertex][j]] == false){
             parent = vertex;
-            dfsv(g, g[vertex][j], time, start, end, visited);
+            dfsv(g, g[vertex][j], time, end, visited);
         }
     }
     end[vertex] = ++*(time);
+}
+
+int *dfsTPose(vector<int> t[], int foo[]){
+    bool visited[v];
+    int i, time = 0, *end = (int*)malloc(v * sizeof(int));
+    for(i = 0; i < v; i++){
+        visited[i] = false;
+        end[i] = 0;
+    }
+    for(i = 0; i < v; i++){
+        if(visited[foo[i]] == false)
+            dfsv(t, foo[i], &time, end, visited);
+    }
+    return end;
 }
 
 int *endTimeOrder(int normEnds[]){
@@ -102,18 +103,3 @@ int *endTimeOrder(int normEnds[]){
     return foo;
 }
 
-int *dfsTPose(vector<int> t[], int foo[]){
-    bool visited[v];
-    int i, time = 0, start[v], *end = (int*)malloc(v * sizeof(int));
-    for(i = 0; i < v; i++){
-        visited[i] = false;
-        start[i] = 0;
-        end[i] = 0;
-    }
-    for(i = 0; i < v; i++){
-        if(visited[foo[i]] == false){
-            dfsv(t, foo[i], &time, start, end, visited);
-        }
-    }
-    return end;
-}
