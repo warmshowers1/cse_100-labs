@@ -34,18 +34,16 @@ void bell(vector<int> vert[], int **weight){
     int i, j, k, dist[v]; // Initializes distances of 
     bool noCycle = true;
     long V, UW;
-    for(i = 0; i < v; i++){ // each vertex from source 
+    for(i = 0; i < v; i++) // each vertex from source 
         dist[i] = INT32_MAX;
-    }
     dist[0] = 0;
     for(i = 0; i < (v-1); i++){
         for(j = 0; j < v; j++){ // for each edge
             for(k = 0; k < vert[j].size(); k++){
                 V = dist[vert[j][k]];
                 UW = (long)dist[j] + (long)weight[j][vert[j][k]];
-                if(V > UW){ // Relax
+                if(V > UW) // Relax
                     dist[vert[j][k]] = dist[j] + weight[j][vert[j][k]];
-                }
             }
         }
     }
@@ -71,4 +69,3 @@ void bell(vector<int> vert[], int **weight){
         }
     }
 }
-
