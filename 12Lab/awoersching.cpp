@@ -12,7 +12,7 @@ void bell(vector<int> vert[], int **weight);
 int v, e;
 
 int main(){
-    int i, j, u, v, w;
+    int i, j, u, V, w;
     cin >> v >> e;
     int **weight = (int**)malloc(v * sizeof(int*));
     for(i = 0; i < v; i++){
@@ -22,42 +22,45 @@ int main(){
     }
     vector<int> vert[v];
     for(i = 0; i < e; i++){
-        cin >> u >> v >> w;
-        weight[u][v] = w;
-        vert[u].push_back(v);
+        cin >> u >> V >> w;
+        weight[u][V] = w;
+        vert[u].push_back(V);
     }
     bell(vert, weight);
     return 0;
 }
 
 void bell(vector<int> vert[], int **weight){
-    int i, j, k, dist[v], parent[v]; // Initializes distances of each vertex 
+    int i, j, k, dist[v]; // Initializes distances of 
     bool noCycle = true;
-    for(i = 0; i < v; i++){ // from source and parents of each vertex
+    long V, UW;
+    for(i = 0; i < v; i++){ // each vertex from source 
         dist[i] = INT32_MAX;
-        parent[i] = -1;
     }
     dist[0] = 0;
     for(i = 0; i < (v-1); i++){
         for(j = 0; j < v; j++){ // for each edge
             for(k = 0; k < vert[j].size(); k++){
-                if(dist[k] > (dist[j] + weight[j][k])){ // Relax
-                    dist[k] = dist[j] + weight[j][k];
-                    parent[k] = j;
+                V = dist[vert[j][k]];
+                UW = (long)dist[j] + (long)weight[j][vert[j][k]];
+                if(V > UW){ // Relax
+                    dist[vert[j][k]] = dist[j] + weight[j][vert[j][k]];
                 }
             }
         }
     }
     for(i = 0; i < v; i++){
         for(j = 0; j < vert[i].size(); j++){
-            if(dist[j] > (dist[i] + weight[i][j])){
+            V = dist[vert[i][j]];
+            UW = (long)dist[i] + (long)weight[i][vert[i][j]];
+            if(V > UW){
                 noCycle = false;
                 break;
             }
         }
-        if(noCycle == false) break;
+        if(!noCycle) break;
     }
-    if(noCycle) cout << "FALSE" << endl;
+    if(!noCycle) cout << "FALSE" << endl;
     else{
         cout << "TRUE" << endl;
         for(i = 0; i < v; i++){
